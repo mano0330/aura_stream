@@ -16,7 +16,11 @@
     "db:push": "npm run push -w packages/db",
     "db:seed": "npm run seed -w packages/db"
   },
+  "dependencies": {
+    "@prisma/client": "^5.11.0"
+  },
   "devDependencies": {
+    "prisma": "^5.11.0",
     "typescript": "^5.3.3"
   }
 }
