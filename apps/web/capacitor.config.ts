@@ -9,9 +9,9 @@ const config: CapacitorConfig = {
   server: {
     // During development, load from the live Next.js dev server
     // Comment this out for production APK builds
-    url: 'http://192.168.0.10:3000',
+    url: 'https://web-delta-jade-88.vercel.app',
     cleartext: true, // Allow HTTP on Android
-    allowNavigation: ['192.168.0.10', '*.youtube.com', '*.googleapis.com'],
+    allowNavigation: ['web-delta-jade-88.vercel.app', '*.youtube.com', '*.googleapis.com'],
   },
   android: {
     allowMixedContent: true,
