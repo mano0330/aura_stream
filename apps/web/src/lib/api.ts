@@ -1,18 +1,22 @@
-let API_URL = 'http://localhost:3001';
+let API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 if (typeof window !== 'undefined') {
-  const protocol = window.location.protocol;
-  const hostname = window.location.hostname;
-
-  if (hostname && hostname !== 'localhost' && hostname !== '127.0.0.1') {
-    // Accessing via IP or custom domain - use port 3001 of current host
-    API_URL = `${protocol}//${hostname}:3001`;
-  } else if (process.env.NEXT_PUBLIC_API_URL) {
+  // If NEXT_PUBLIC_API_URL is configured and points to a remote server, prioritize it
+  if (process.env.NEXT_PUBLIC_API_URL && !process.env.NEXT_PUBLIC_API_URL.includes('localhost') && !process.env.NEXT_PUBLIC_API_URL.includes('127.0.0.1')) {
     API_URL = process.env.NEXT_PUBLIC_API_URL;
+  } else {
+    const protocol = window.location.protocol;
+    const hostname = window.location.hostname;
+
+    // Fallback logic for local network testing (e.g. 192.168.X.X)
+    if (hostname && hostname !== 'localhost' && hostname !== '127.0.0.1' && !hostname.endsWith('.vercel.app')) {
+      API_URL = `${protocol}//${hostname}:3001`;
+    } else if (process.env.NEXT_PUBLIC_API_URL) {
+      API_URL = process.env.NEXT_PUBLIC_API_URL;
+    }
   }
-} else {
-  API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 }
+
 
 export async function fetchApi(endpoint: string, options: RequestInit = {}) {
   const headers = new Headers(options.headers);
