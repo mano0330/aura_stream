@@ -1,0 +1,181 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String                  @id @default(uuid())
+  email             String                  @unique
+  username          String                  @unique
+  passwordHash      String?
+  avatarUrl         String?
+  bio               String?
+  role              String                  @default("USER")
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
+  preferences       String?
+  aiRecommendations AIRecommendation[]
+  accounts          Account[]
+  collaborations    CollaborativePlaylist[]
+  comments          Comment[]
+  following         Follow[]                @relation("UserFollowing")
+  followers         Follow[]                @relation("UserFollowers")
+  likes             Like[]
+  listeningHistory  ListeningHistory[]
+  playlists         Playlist[]
+  sessions          Session[]
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Artist {
+  id               String   @id @default(uuid())
+  name             String   @unique
+  youtubeChannelId String   @unique
+  avatarUrl        String?
+  bio              String?
+  createdAt        DateTime @default(now())
+  songs            Song[]
+}
+
+model Song {
+  id               String             @id @default(uuid())
+  youtubeId        String             @unique
+  title            String
+  artistId         String
+  artistName       String
+  albumName        String?
+  thumbnailUrl     String?
+  durationSeconds  Int
+  createdAt        DateTime           @default(now())
+  recommendations  AIRecommendation[]
+  comments         Comment[]
+  listeningHistory ListeningHistory[]
+  playlistSongs    PlaylistSong[]
+  artist           Artist             @relation(fields: [artistId], references: [id], onDelete: Cascade)
+}
+
+model Playlist {
+  id              String                  @id @default(uuid())
+  title           String
+  description     String?
+  coverUrl        String?
+  ownerId         String
+  isPrivate       Boolean                 @default(false)
+  isCollaborative Boolean                 @default(false)
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+  collaborators   CollaborativePlaylist[]
+  owner           User                    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  playlistSongs   PlaylistSong[]
+}
+
+model PlaylistSong {
+  id         String   @id @default(uuid())
+  playlistId String
+  songId     String
+  position   Int
+  addedAt    DateTime @default(now())
+  playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  song       Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
+}
+
+model CollaborativePlaylist {
+  id         String   @id @default(uuid())
+  playlistId String
+  userId     String
+  joinedAt   DateTime @default(now())
+  playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([playlistId, userId])
+}
+
+model Like {
+  id         String   @id @default(uuid())
+  userId     String
+  targetId   String
+  targetType String
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, targetId, targetType])
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  userId    String
+  songId    String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  song      Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Follow {
+  id          String   @id @default(uuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+  follower    User     @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+}
+
+model ListeningHistory {
+  id                      String   @id @default(uuid())
+  userId                  String
+  songId                  String
+  listenedAt              DateTime @default(now())
+  durationListenedSeconds Int      @default(0)
+  song                    Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AIRecommendation {
+  id                   String   @id @default(uuid())
+  userId               String
+  songId               String
+  recommendationReason String
+  createdAt            DateTime @default(now())
+  song                 Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
