@@ -60,7 +60,6 @@ async function bootstrap() {
 
 export const handler = async (req: any, res: any) => {
   console.log(`[VERCEL HANDLER] Method: ${req.method}, URL: ${req.url}`);
-  console.log(`[VERCEL HANDLER] DATABASE_URL: ${process.env.DATABASE_URL}`);
 
   // Map standard requests to swagger docs accurately in serverless environment
   if (req.url === '/api/docs' || req.url === '/api/docs/') {
