@@ -3,14 +3,13 @@ import { ValidationPipe } from '@nestjs/common';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import serverlessExpress from '@vendia/serverless-express';
 import express from 'express';
 
-let cachedServer: any;
+const expressApp = express();
+let isInitialized = false;
 
 async function bootstrap() {
-  if (!cachedServer) {
-    const expressApp = express();
+  if (!isInitialized) {
     const app = await NestFactory.create(
       AppModule,
       new ExpressAdapter(expressApp),
@@ -55,16 +54,16 @@ async function bootstrap() {
     SwaggerModule.setup('api/docs', app, document);
 
     await app.init();
-    cachedServer = serverlessExpress({ app: expressApp });
+    isInitialized = true;
   }
-  return cachedServer;
 }
 
-export const handler = async (event: any, context: any, callback: any) => {
+export const handler = async (req: any, res: any) => {
   // Map standard requests to swagger docs accurately in serverless environment
-  if (event.path === '/api/docs' || event.path === '/api/docs/') {
-    event.path = '/api/docs/index.html';
+  if (req.url === '/api/docs' || req.url === '/api/docs/') {
+    req.url = '/api/docs/index.html';
   }
-  const server = await bootstrap();
-  return server(event, context, callback);
+  await bootstrap();
+  expressApp(req, res);
 };
+
