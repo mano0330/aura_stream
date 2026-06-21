@@ -8,8 +8,9 @@ if (typeof window !== 'undefined') {
     const protocol = window.location.protocol;
     const hostname = window.location.hostname;
 
-    // Fallback logic for local network testing (e.g. 192.168.X.X)
-    if (hostname && hostname !== 'localhost' && hostname !== '127.0.0.1' && !hostname.endsWith('.vercel.app')) {
+    // Fallback logic for local network testing (e.g. 192.168.X.X or 10.X.X.X)
+    const isLocalIp = /^(?:127|192\.168|10|172\.(?:1[6-9]|2\d|3[0-1]))\.\d+\.\d+\.\d+$/.test(hostname);
+    if (isLocalIp && hostname !== 'localhost' && hostname !== '127.0.0.1') {
       API_URL = `${protocol}//${hostname}:3001`;
     } else if (process.env.NEXT_PUBLIC_API_URL) {
       API_URL = process.env.NEXT_PUBLIC_API_URL;
