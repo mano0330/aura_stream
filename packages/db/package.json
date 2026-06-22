@@ -7,8 +7,8 @@
   "scripts": {
     "build": "tsc",
     "postbuild": "node scripts/postbuild.js",
-    "generate": "prisma generate",
-    "push": "prisma db push",
+    "generate": "npx prisma generate",
+    "push": "npx prisma db push",
     "seed": "node dist/seed.js"
   },
   "dependencies": {
