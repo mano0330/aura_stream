@@ -36,7 +36,7 @@ const nextConfig: NextConfig = {
 
   // Environment variables exposed to browser
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001",
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "https://aurastream-mano0330s-projects.vercel.app",
   },
 };
 
