@@ -19,6 +19,24 @@ export class AdminController {
     return this.adminService.getUsers();
   }
 
+  // Enriched users list with listening stats
+  @Get('users-insights')
+  getUsersWithInsights() {
+    return this.adminService.getUsersWithInsights();
+  }
+
+  // Deep insights for a single user
+  @Get('users/:id/insights')
+  getUserInsights(@Param('id') userId: string) {
+    return this.adminService.getUserInsights(userId);
+  }
+
+  // Global live activity feed — what all users are listening to
+  @Get('activity-feed')
+  getGlobalActivityFeed() {
+    return this.adminService.getGlobalActivityFeed();
+  }
+
   @Put('users/:id/role')
   updateUserRole(
     @Param('id') userId: string,
