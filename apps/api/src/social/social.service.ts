@@ -86,11 +86,15 @@ export class SocialService {
     });
     const followingIds = following.map(f => f.followingId);
 
-    if (followingIds.length === 0) return [];
+    // If user follows nobody, show a global discovery feed (all users except self)
+    const targetIds = followingIds.length > 0 ? followingIds : undefined;
 
-    // Fetch recent listening history of followed users
     const recentHistory = await this.prisma.client.listeningHistory.findMany({
-      where: { userId: { in: followingIds } },
+      where: {
+        ...(targetIds
+          ? { userId: { in: targetIds } }
+          : { userId: { not: userId } }), // global: exclude self
+      },
       include: {
         user: { select: { id: true, username: true, avatarUrl: true } },
         song: true,
@@ -101,9 +105,11 @@ export class SocialService {
 
     return recentHistory.map(h => ({
       type: 'LISTENED',
+      isDiscovery: followingIds.length === 0, // flag so frontend can show "Discover" label
       user: h.user,
       song: h.song,
       timestamp: h.listenedAt,
     }));
   }
+
 }
