@@ -19,11 +19,16 @@ import Link from 'next/link';
 import NowPlayingScreen from '@/components/NowPlayingScreen';
 
 // ── Seeded catalog for rich home page visuals ──────────────────────────
+// Helper: get best-quality YouTube thumbnail
+function hqThumb(youtubeId: string): string {
+  return `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`;
+}
+
 const MOCK_TRENDING: Track[] = [
-  { id: '1', title: 'Cornfield Chase', artistName: 'Hans Zimmer', durationSeconds: 126, thumbnailUrl: 'https://img.youtube.com/vi/1FzVWlOKnCc/mqdefault.jpg', youtubeId: '1FzVWlOKnCc' },
-  { id: '2', title: 'Get Lucky (feat. Pharrell)', artistName: 'Daft Punk', durationSeconds: 248, thumbnailUrl: 'https://img.youtube.com/vi/5NV6Rdv1a3I/mqdefault.jpg', youtubeId: '5NV6Rdv1a3I' },
-  { id: '3', title: 'Starboy', artistName: 'The Weeknd', durationSeconds: 230, thumbnailUrl: 'https://img.youtube.com/vi/34Na4j8AVgA/mqdefault.jpg', youtubeId: '34Na4j8AVgA' },
-  { id: '4', title: 'Intro', artistName: 'The xx', durationSeconds: 128, thumbnailUrl: 'https://img.youtube.com/vi/hhnZ5115rn4/mqdefault.jpg', youtubeId: 'hhnZ5115rn4' },
+  { id: '1', title: 'Cornfield Chase', artistName: 'Hans Zimmer', durationSeconds: 126, thumbnailUrl: hqThumb('1FzVWlOKnCc'), youtubeId: '1FzVWlOKnCc' },
+  { id: '2', title: 'Get Lucky (feat. Pharrell)', artistName: 'Daft Punk', durationSeconds: 248, thumbnailUrl: hqThumb('5NV6Rdv1a3I'), youtubeId: '5NV6Rdv1a3I' },
+  { id: '3', title: 'Starboy', artistName: 'The Weeknd', durationSeconds: 230, thumbnailUrl: hqThumb('34Na4j8AVgA'), youtubeId: '34Na4j8AVgA' },
+  { id: '4', title: 'Intro', artistName: 'The xx', durationSeconds: 128, thumbnailUrl: hqThumb('hhnZ5115rn4'), youtubeId: 'hhnZ5115rn4' },
 ];
 
 const MOCK_MIXES = [
@@ -249,11 +254,16 @@ export default function DashboardPage() {
     }
   }, [isLoading, isAuthenticated]);
 
-  // ── Onboarding Questionnaire Check ──
+  // ── Onboarding Questionnaire — only show once at first signup ──
   useEffect(() => {
     if (!isLoading && isAuthenticated && user) {
-      if (!user.preferences) {
+      // Only show if no preferences AND this session is a fresh signup (not a repeated login)
+      const hasSeenOnboarding = typeof window !== 'undefined'
+        ? sessionStorage.getItem(`onboarding_shown_${user.id}`)
+        : 'true';
+      if (!user.preferences && !hasSeenOnboarding) {
         setShowOnboarding(true);
+        sessionStorage.setItem(`onboarding_shown_${user.id}`, '1');
       }
     }
   }, [isLoading, isAuthenticated, user]);
@@ -326,7 +336,12 @@ export default function DashboardPage() {
     setLoadingTrending(true);
     try {
       const data = await fetchApi('/music/trending');
-      setTrendingTracks(data.slice(0, 8));
+      // Upgrade thumbnails to HQ
+      const enriched = (data || []).map((t: Track) => ({
+        ...t,
+        thumbnailUrl: hqThumb(t.youtubeId),
+      }));
+      setTrendingTracks(enriched.slice(0, 20));
     } catch (e) {
       setTrendingTracks(MOCK_TRENDING);
     } finally {
@@ -338,13 +353,29 @@ export default function DashboardPage() {
     if (!isAuthenticated || !user) return;
     setLoadingRecommendations(true);
     try {
-      // 1. Try fetching history
+      const upgradeThumb = (tracks: Track[]) =>
+        tracks.map(t => ({ ...t, thumbnailUrl: hqThumb(t.youtubeId) }));
+
+      // 1. Try fetching history — use multiple recent artists for variety
       const history = await fetchApi('/library/history');
       if (history && history.length > 0) {
-        const recentArtist = history[0]?.song?.artistName || history[0]?.artistName;
-        if (recentArtist) {
-          const data = await fetchApi(`/music/search?q=${encodeURIComponent(recentArtist)}`);
-          setRecommendedTracks(data.slice(0, 8));
+        const artists = [...new Set(
+          history.slice(0, 5).map((h: any) => h.song?.artistName || h.artistName).filter(Boolean)
+        )] as string[];
+        if (artists.length > 0) {
+          const queries = artists.slice(0, 3).map((a: string) =>
+            fetchApi(`/music/search?q=${encodeURIComponent(a + ' similar music')}`).catch(() => [])
+          );
+          const results = await Promise.all(queries);
+          const merged = results.flat();
+          // deduplicate
+          const seen = new Set<string>();
+          const deduped = merged.filter((t: Track) => {
+            if (seen.has(t.youtubeId)) return false;
+            seen.add(t.youtubeId);
+            return true;
+          });
+          setRecommendedTracks(upgradeThumb(deduped.slice(0, 20)));
           setLoadingRecommendations(false);
           return;
         }
@@ -353,12 +384,22 @@ export default function DashboardPage() {
       // 2. Fallback to onboarding preferences
       if (user.preferences) {
         const prefs = JSON.parse(user.preferences);
-        const lang = prefs.languages?.[0] || '';
-        const artist = prefs.artists?.[0] || '';
-        if (lang || artist) {
-          const query = `${lang} ${artist} music hits`.trim();
-          const data = await fetchApi(`/music/search?q=${encodeURIComponent(query)}`);
-          setRecommendedTracks(data.slice(0, 8));
+        const langs: string[] = prefs.languages || [];
+        const artists: string[] = prefs.artists || [];
+        const queries = [
+          ...langs.slice(0, 2).map(l => fetchApi(`/music/search?q=${encodeURIComponent(l + ' music hits')}`).catch(() => [])),
+          ...artists.slice(0, 2).map(a => fetchApi(`/music/search?q=${encodeURIComponent(a)}`).catch(() => [])),
+        ];
+        const results = await Promise.all(queries);
+        const merged = results.flat();
+        const seen = new Set<string>();
+        const deduped = merged.filter((t: Track) => {
+          if (seen.has(t.youtubeId)) return false;
+          seen.add(t.youtubeId);
+          return true;
+        });
+        if (deduped.length > 0) {
+          setRecommendedTracks(upgradeThumb(deduped.slice(0, 20)));
           setLoadingRecommendations(false);
           return;
         }
@@ -366,7 +407,7 @@ export default function DashboardPage() {
 
       // 3. Absolute fallback to trending
       const data = await fetchApi('/music/trending');
-      setRecommendedTracks(data.slice(8, 16));
+      setRecommendedTracks(upgradeThumb((data || []).slice(0, 20)));
     } catch (e) {
       setRecommendedTracks([]);
     } finally {
@@ -394,7 +435,9 @@ export default function DashboardPage() {
     setSearching(true);
     try {
       const data = await fetchApi(`/music/search?q=${encodeURIComponent(query)}`);
-      setSearchResults(data);
+      // Upgrade all thumbnails to HQ
+      const enriched = (data || []).map((t: Track) => ({ ...t, thumbnailUrl: hqThumb(t.youtubeId) }));
+      setSearchResults(enriched);
       setActiveTab('search-results');
     } catch (err: any) {
       alert(err.message || 'Search failed');
@@ -402,6 +445,7 @@ export default function DashboardPage() {
       setSearching(false);
     }
   };
+
 
   const fetchDiscoverListeners = async () => {
     try {
