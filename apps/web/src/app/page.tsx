@@ -488,14 +488,7 @@ export default function DashboardPage() {
     }
   };
 
-  const fetchDiscoverListeners = async () => {
-    try {
-      const data = await fetchApi('/users/discover-listeners');
-      setDiscoverListeners(data || []);
-    } catch (e) {
-      setDiscoverListeners([]);
-    }
-  };
+
 
 
   const handleTrackSelect = (track: Track) => {
