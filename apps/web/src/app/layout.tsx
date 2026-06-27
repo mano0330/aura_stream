@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import YouTubePlayer from "@/components/YouTubePlayer";
 import AuthGuard from "@/components/AuthGuard";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,7 +46,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#9333ea",
+  themeColor: "#060610",
   colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
@@ -63,6 +64,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
+        <Script src="/spoof-visibility.js" strategy="beforeInteractive" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
