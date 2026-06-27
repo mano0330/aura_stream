@@ -227,10 +227,19 @@ export default function AIDJPage() {
   }
 
   return (
-    <div className="relative min-h-screen bg-[#07070a] text-white py-12 px-4 md:px-8 pb-32">
+    <div
+      className="relative min-h-screen text-white py-12 px-4 md:px-8 pb-32"
+      style={{
+        background: 'linear-gradient(135deg, #060610 0%, #0a0520 40%, #060612 100%)',
+      }}
+    >
       {/* Background orbs */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-purple-600/8 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/3 right-1/4 w-[300px] h-[300px] rounded-full bg-pink-600/8 blur-[100px] pointer-events-none" />
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full opacity-20 blur-3xl"
+          style={{ background: 'radial-gradient(circle, #7c3aed 0%, transparent 70%)' }} />
+        <div className="absolute bottom-[-10%] right-[-5%] w-[400px] h-[400px] rounded-full opacity-15 blur-3xl"
+          style={{ background: 'radial-gradient(circle, #f59e0b 0%, transparent 70%)' }} />
+      </div>
 
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Header */}

@@ -51,10 +51,19 @@ export default function DownloadPage() {
   ];
 
   return (
-    <div className="relative min-h-screen bg-[#07070a] text-white flex flex-col items-center px-4 py-8 overflow-y-auto">
+    <div
+      className="relative min-h-screen text-white flex flex-col items-center px-4 py-8 overflow-y-auto"
+      style={{
+        background: 'linear-gradient(135deg, #060610 0%, #0a0520 40%, #060612 100%)',
+      }}
+    >
       {/* Dynamic background orbs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-purple-900/10 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-pink-900/10 blur-[120px] pointer-events-none" />
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full opacity-20 blur-3xl"
+          style={{ background: 'radial-gradient(circle, #7c3aed 0%, transparent 70%)' }} />
+        <div className="absolute bottom-[-10%] right-[-5%] w-[400px] h-[400px] rounded-full opacity-15 blur-3xl"
+          style={{ background: 'radial-gradient(circle, #f59e0b 0%, transparent 70%)' }} />
+      </div>
 
       {/* Header / Navigation back */}
       <div className="w-full max-w-4xl flex items-center justify-between mb-8 z-10">
