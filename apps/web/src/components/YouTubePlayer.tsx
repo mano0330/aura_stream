@@ -173,7 +173,19 @@ export default function YouTubePlayer() {
 
   // ── Sync Media Session API for mobile lock screen and background controls ──
   useEffect(() => {
-    if (!currentTrack || typeof window === 'undefined' || !('mediaSession' in navigator)) return;
+    if (!currentTrack || typeof window === 'undefined') return;
+
+    // Call native Android background Service if running on Android container
+    const win = window as any;
+    if (win.AndroidAudio && win.AndroidAudio.updateTrack) {
+      try {
+        win.AndroidAudio.updateTrack(currentTrack.title, currentTrack.artistName, isPlaying);
+      } catch (err) {
+        console.warn('Failed updating native Android media track info', err);
+      }
+    }
+
+    if (!('mediaSession' in navigator)) return;
 
     // Update metadata
     navigator.mediaSession.metadata = new window.MediaMetadata({
@@ -213,6 +225,38 @@ export default function YouTubePlayer() {
       console.warn('MediaSession handler registration failed', e);
     }
   }, [currentTrack, isPlaying, youtubePlayer]);
+
+  // Listen for native Android Media Session controller actions from the service notification
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleSessionPlay = () => {
+      usePlayerStore.getState().setPlaying(true);
+      if (youtubePlayer && youtubePlayer.playVideo) youtubePlayer.playVideo();
+    };
+    const handleSessionPause = () => {
+      usePlayerStore.getState().setPlaying(false);
+      if (youtubePlayer && youtubePlayer.pauseVideo) youtubePlayer.pauseVideo();
+    };
+    const handleSessionNext = () => {
+      usePlayerStore.getState().nextTrack();
+    };
+    const handleSessionPrev = () => {
+      usePlayerStore.getState().prevTrack();
+    };
+
+    window.addEventListener('media-session-play', handleSessionPlay);
+    window.addEventListener('media-session-pause', handleSessionPause);
+    window.addEventListener('media-session-next', handleSessionNext);
+    window.addEventListener('media-session-prev', handleSessionPrev);
+
+    return () => {
+      window.removeEventListener('media-session-play', handleSessionPlay);
+      window.removeEventListener('media-session-pause', handleSessionPause);
+      window.removeEventListener('media-session-next', handleSessionNext);
+      window.removeEventListener('media-session-prev', handleSessionPrev);
+    };
+  }, [youtubePlayer]);
 
   const startTrackingTime = () => {
     if (timeUpdateInterval.current) clearInterval(timeUpdateInterval.current);
