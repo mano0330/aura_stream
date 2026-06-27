@@ -15,11 +15,19 @@ public class AudioService extends Service {
     private static final String CHANNEL_ID = "aura_stream_audio";
     private static final int NOTIFICATION_ID = 1;
 
+    private android.os.PowerManager.WakeLock wakeLock;
+
     @Override
     public void onCreate() {
         super.onCreate();
         createNotificationChannel();
         startForeground(NOTIFICATION_ID, buildNotification("Aura Stream", "Music is playing..."));
+
+        android.os.PowerManager powerManager = (android.os.PowerManager) getSystemService(POWER_SERVICE);
+        if (powerManager != null) {
+            wakeLock = powerManager.newWakeLock(android.os.PowerManager.PARTIAL_WAKE_LOCK, "AuraStream::WakeLock");
+            wakeLock.acquire();
+        }
     }
 
     @Override
@@ -76,6 +84,14 @@ public class AudioService extends Service {
         NotificationManager manager = getSystemService(NotificationManager.class);
         if (manager != null) {
             manager.notify(NOTIFICATION_ID, buildNotification(title, text));
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (wakeLock != null && wakeLock.isHeld()) {
+            wakeLock.release();
         }
     }
 }

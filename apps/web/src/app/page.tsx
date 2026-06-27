@@ -707,10 +707,13 @@ export default function DashboardPage() {
             );
           })}
 
-          {isSidebarOpen && userPlaylists.length > 0 && (
+          {isSidebarOpen && (
             <div className="border-t border-white/5 pt-4 mt-4 space-y-1">
               <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold px-4 mb-2">My Playlists</p>
-              {userPlaylists.slice(0, 6).map((pl) => (
+              <Link href="/playlists/favorites" className="block text-amber-400 hover:text-amber-300 text-sm py-1.5 px-4 rounded-lg hover:bg-white/5 truncate font-bold flex items-center gap-2">
+                <span>❤️</span> Favorites
+              </Link>
+              {userPlaylists.slice(0, 5).map((pl) => (
                 <Link key={pl.id} href={`/playlists/${pl.id}`} className="block text-zinc-400 hover:text-white text-sm py-1.5 px-4 rounded-lg hover:bg-white/5 truncate font-medium">
                   {pl.title}
                 </Link>
@@ -881,13 +884,20 @@ export default function DashboardPage() {
                     Log In
                   </Link>
                 </div>
-              ) : userPlaylists.length === 0 ? (
-                <div className="py-12 text-center text-zinc-500 text-sm">
-                  <ListMusic className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
-                  No playlists yet. Create your first one!
-                </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+                  {/* Special Favorites Playlist Card */}
+                  <Link href="/playlists/favorites" className="glass-card rounded-2xl p-4 flex flex-col group cursor-pointer border border-accent/20">
+                    <div className="aspect-square rounded-xl overflow-hidden mb-3 bg-gradient-to-br from-purple-900 to-indigo-900 border border-white/5 relative flex items-center justify-center">
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,#f59e0b_0%,transparent_60%)] opacity-30" />
+                      <span className="text-4xl text-amber-400 filter drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]">❤️</span>
+                    </div>
+                    <h4 className="font-bold truncate text-sm">Favorites</h4>
+                    <p className="text-zinc-400 text-xs mt-1 truncate">
+                      {likedSongIds.length} tracks
+                    </p>
+                  </Link>
+
                   {userPlaylists.map((pl) => (
                     <Link key={pl.id} href={`/playlists/${pl.id}`} className="glass-card rounded-2xl p-4 flex flex-col group cursor-pointer">
                       <div className="aspect-square rounded-xl overflow-hidden mb-3 bg-zinc-800 border border-white/5">

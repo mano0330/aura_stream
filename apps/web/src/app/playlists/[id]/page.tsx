@@ -47,10 +47,32 @@ export default function PlaylistDetailsPage() {
   const fetchPlaylist = async () => {
     setLoading(true);
     try {
-      const data = await fetchApi(`/playlists/${playlistId}`);
-      setPlaylist(data);
-      setIsPrivate(data.isPrivate);
-      setIsCollaborative(data.isCollaborative);
+      if (playlistId === 'favorites') {
+        const songs = await fetchApi('/library/likes/songs');
+        const favoritesPlaylist = {
+          id: 'favorites',
+          title: 'Favorites',
+          description: 'Your liked songs automatically saved to your account',
+          isPrivate: true,
+          isCollaborative: false,
+          ownerId: user?.id,
+          owner: { username: user?.username || 'You' },
+          coverUrl: 'https://images.unsplash.com/photo-1513829096960-ef0931497990?auto=format&fit=crop&w=400&h=400',
+          collaborators: [],
+          playlistSongs: (songs || []).map((s: any) => ({
+            id: s.id,
+            song: s
+          }))
+        };
+        setPlaylist(favoritesPlaylist);
+        setIsPrivate(true);
+        setIsCollaborative(false);
+      } else {
+        const data = await fetchApi(`/playlists/${playlistId}`);
+        setPlaylist(data);
+        setIsPrivate(data.isPrivate);
+        setIsCollaborative(data.isCollaborative);
+      }
     } catch (err: any) {
       setError(err.message || 'Could not load playlist');
     } finally {
@@ -85,9 +107,29 @@ export default function PlaylistDetailsPage() {
 
   const handleRemoveTrack = async (songId: string) => {
     try {
-      await fetchApi(`/playlists/${playlistId}/songs/${songId}`, {
-        method: 'DELETE',
-      });
+      if (playlistId === 'favorites') {
+        const psItem = playlist.playlistSongs.find((ps: any) => ps.song.id === songId);
+        if (!psItem) return;
+        const song = psItem.song;
+        await fetchApi('/library/likes', {
+          method: 'POST',
+          body: JSON.stringify({
+            targetId: song.youtubeId,
+            targetType: 'SONG',
+            songData: {
+              youtubeId: song.youtubeId,
+              title: song.title,
+              artistName: song.artistName,
+              durationSeconds: song.durationSeconds,
+              thumbnailUrl: song.thumbnailUrl
+            }
+          })
+        });
+      } else {
+        await fetchApi(`/playlists/${playlistId}/songs/${songId}`, {
+          method: 'DELETE',
+        });
+      }
       // Refresh local view
       setPlaylist({
         ...playlist,
@@ -212,7 +254,7 @@ export default function PlaylistDetailsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* left col: Track list */}
-          <div className="lg:col-span-2 glass rounded-2xl p-6">
+          <div className={`${playlistId === 'favorites' ? 'lg:col-span-3' : 'lg:col-span-2'} glass rounded-2xl p-6`}>
             <h3 className="text-lg font-bold border-b border-white/5 pb-4 mb-4 flex items-center gap-2">
               <Music className="w-5 h-5 text-accent" /> Tracks
             </h3>
@@ -276,114 +318,116 @@ export default function PlaylistDetailsPage() {
           </div>
 
           {/* right col: Settings & Collaborators */}
-          <div className="lg:col-span-1 space-y-6">
-            
-            {/* Playlist settings */}
-            {isOwner && (
-              <div className="glass rounded-2xl p-6 space-y-4">
-                <h3 className="text-lg font-bold border-b border-white/5 pb-3">Playlist Settings</h3>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-col">
-                    <span className="text-sm font-semibold">Private Playlist</span>
-                    <span className="text-zinc-500 text-[10px]">Only you can view it</span>
-                  </div>
-                  <input 
-                    type="checkbox"
-                    checked={isPrivate}
-                    onChange={(e) => handleToggleSettings('isPrivate', e.target.checked)}
-                    className="accent-primary w-4 h-4 cursor-pointer"
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-col">
-                    <span className="text-sm font-semibold">Collaborative</span>
-                    <span className="text-zinc-500 text-[10px]">Allows friends to add/remove songs</span>
-                  </div>
-                  <input 
-                    type="checkbox"
-                    checked={isCollaborative}
-                    onChange={(e) => handleToggleSettings('isCollaborative', e.target.checked)}
-                    className="accent-primary w-4 h-4 cursor-pointer"
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Collaborators list */}
-            {(isOwner || isCollaborative) && (
-              <div className="glass rounded-2xl p-6 space-y-4">
-                <h3 className="text-lg font-bold border-b border-white/5 pb-3 flex items-center gap-2">
-                  <Users className="w-5 h-5 text-accent" /> Collaborators
-                </h3>
-
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center font-bold text-xs uppercase text-white">
-                      {playlist.owner.username[0]}
+          {playlistId !== 'favorites' && (
+            <div className="lg:col-span-1 space-y-6">
+              
+              {/* Playlist settings */}
+              {isOwner && (
+                <div className="glass rounded-2xl p-6 space-y-4">
+                  <h3 className="text-lg font-bold border-b border-white/5 pb-3">Playlist Settings</h3>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col">
+                      <span className="text-sm font-semibold">Private Playlist</span>
+                      <span className="text-zinc-500 text-[10px]">Only you can view it</span>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold truncate">{playlist.owner.username}</p>
-                      <span className="text-[10px] text-accent font-bold uppercase tracking-wider">Owner</span>
-                    </div>
+                    <input 
+                      type="checkbox"
+                      checked={isPrivate}
+                      onChange={(e) => handleToggleSettings('isPrivate', e.target.checked)}
+                      className="accent-primary w-4 h-4 cursor-pointer"
+                    />
                   </div>
 
-                  {playlist.collaborators.map((c: any) => (
-                    <div key={c.id} className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center font-bold text-xs uppercase text-white">
-                          {c.user.username[0]}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold truncate">{c.user.username}</p>
-                          <span className="text-[10px] text-zinc-500 uppercase tracking-wider">Editor</span>
-                        </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col">
+                      <span className="text-sm font-semibold">Collaborative</span>
+                      <span className="text-zinc-500 text-[10px]">Allows friends to add/remove songs</span>
+                    </div>
+                    <input 
+                      type="checkbox"
+                      checked={isCollaborative}
+                      onChange={(e) => handleToggleSettings('isCollaborative', e.target.checked)}
+                      className="accent-primary w-4 h-4 cursor-pointer"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Collaborators list */}
+              {(isOwner || isCollaborative) && (
+                <div className="glass rounded-2xl p-6 space-y-4">
+                  <h3 className="text-lg font-bold border-b border-white/5 pb-3 flex items-center gap-2">
+                    <Users className="w-5 h-5 text-accent" /> Collaborators
+                  </h3>
+
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center font-bold text-xs uppercase text-white">
+                        {playlist.owner.username[0]}
                       </div>
-                      
-                      {isOwner && (
-                        <button 
-                          onClick={() => {
-                            if (confirm(`Remove ${c.user.username}?`)) {
-                              fetchApi(`/playlists/${playlistId}/collaborators/${c.user.id}`, { method: 'DELETE' })
-                                .then(() => fetchPlaylist());
-                            }
-                          }}
-                          className="text-red-400 hover:text-red-300 text-xs font-semibold cursor-pointer"
-                        >
-                          Remove
-                        </button>
-                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold truncate">{playlist.owner.username}</p>
+                        <span className="text-[10px] text-accent font-bold uppercase tracking-wider">Owner</span>
+                      </div>
                     </div>
-                  ))}
-                </div>
 
-                {isOwner && isCollaborative && (
-                  <form onSubmit={handleAddCollaborator} className="border-t border-white/5 pt-4 mt-2">
-                    <label className="block text-zinc-400 text-xs mb-2">Add Collaborator by Username</label>
-                    <div className="flex gap-2">
-                      <input 
-                        type="text" 
-                        placeholder="username" 
-                        required
-                        value={collabUsername}
-                        onChange={(e) => setCollabUsername(e.target.value)}
-                        className="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs flex-1 focus:outline-none focus:border-primary"
-                      />
-                      <button 
-                        type="submit" 
-                        className="bg-primary hover:bg-primary/90 text-white rounded-xl px-3 flex items-center justify-center cursor-pointer"
-                      >
-                        <UserPlus className="w-4 h-4" />
-                      </button>
-                    </div>
-                    {collabError && <p className="text-red-400 text-[10px] mt-1">{collabError}</p>}
-                    {collabSuccess && <p className="text-emerald-400 text-[10px] mt-1">{collabSuccess}</p>}
-                  </form>
-                )}
-              </div>
-            )}
-          </div>
+                    {playlist.collaborators.map((c: any) => (
+                      <div key={c.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center font-bold text-xs uppercase text-white">
+                            {c.user.username[0]}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold truncate">{c.user.username}</p>
+                            <span className="text-[10px] text-zinc-500 uppercase tracking-wider">Editor</span>
+                          </div>
+                        </div>
+                        
+                        {isOwner && (
+                          <button 
+                            onClick={() => {
+                              if (confirm(`Remove ${c.user.username}?`)) {
+                                fetchApi(`/playlists/${playlistId}/collaborators/${c.user.id}`, { method: 'DELETE' })
+                                  .then(() => fetchPlaylist());
+                              }
+                            }}
+                            className="text-red-400 hover:text-red-300 text-xs font-semibold cursor-pointer"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {isOwner && isCollaborative && (
+                    <form onSubmit={handleAddCollaborator} className="border-t border-white/5 pt-4 mt-2">
+                      <label className="block text-zinc-400 text-xs mb-2">Add Collaborator by Username</label>
+                      <div className="flex gap-2">
+                        <input 
+                          type="text" 
+                          placeholder="username" 
+                          required
+                          value={collabUsername}
+                          onChange={(e) => setCollabUsername(e.target.value)}
+                          className="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs flex-1 focus:outline-none focus:border-primary"
+                        />
+                        <button 
+                          type="submit" 
+                          className="bg-primary hover:bg-primary/90 text-white rounded-xl px-3 flex items-center justify-center cursor-pointer"
+                        >
+                          <UserPlus className="w-4 h-4" />
+                        </button>
+                      </div>
+                      {collabError && <p className="text-red-400 text-[10px] mt-1">{collabError}</p>}
+                      {collabSuccess && <p className="text-emerald-400 text-[10px] mt-1">{collabSuccess}</p>}
+                    </form>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
 
         </div>
       </div>
