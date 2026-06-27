@@ -88,8 +88,13 @@ public class AudioService extends Service {
             audioManager.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         }
 
-        // 3. Start foreground with initial notification
-        startForeground(NOTIFICATION_ID, buildNotification(currentTitle, currentArtist, false));
+        // 3. Start foreground with initial notification and type mediaPlayback
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(NOTIFICATION_ID, buildNotification(currentTitle, currentArtist, false), 
+                android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+        } else {
+            startForeground(NOTIFICATION_ID, buildNotification(currentTitle, currentArtist, false));
+        }
 
         // 4. Acquire WakeLock
         android.os.PowerManager powerManager = (android.os.PowerManager) getSystemService(POWER_SERVICE);

@@ -65,6 +65,13 @@ public class MainActivity extends BridgeActivity {
                 new android.content.IntentFilter("com.aurastream.app.MEDIA_ACTION"));
         }
 
+        // Request runtime Notification Permission for Android 13+ (Tiramisu)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 101);
+            }
+        }
+
         startAudioService();
     }
 
