@@ -79,17 +79,17 @@ export default function ProfilePage() {
 
   if (isLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f] flex flex-col items-center justify-center text-white px-4">
-        <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center text-white px-4">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen bg-[#07070a] text-white py-12 px-4 md:px-8">
+    <div className="relative min-h-screen text-white py-12 px-4 md:px-8">
       {/* Background gradients */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-purple-600/10 blur-[100px]" />
-      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[350px] h-[350px] rounded-full bg-pink-600/10 blur-[100px]" />
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-primary/10 blur-[100px]" />
+      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[350px] h-[350px] rounded-full bg-accent/10 blur-[100px]" />
 
       <div className="max-w-4xl mx-auto z-10 relative">
         {/* Back Link */}
@@ -103,7 +103,7 @@ export default function ProfilePage() {
           
           {/* left col: Profile Summary & Stats */}
           <div className="md:col-span-1 glass-card rounded-2xl p-6 flex flex-col items-center text-center h-fit">
-            <div className="relative w-32 h-32 rounded-full overflow-hidden mb-4 border-2 border-purple-500/40 bg-zinc-800">
+            <div className="relative w-32 h-32 rounded-full overflow-hidden mb-4 border-2 border-primary/40 bg-zinc-800">
               <img 
                 src={avatarUrl || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150&q=80"} 
                 alt={user?.username} 
@@ -123,17 +123,17 @@ export default function ProfilePage() {
             {/* Statistics */}
             <div className="grid grid-cols-3 gap-4 w-full border-t border-white/5 mt-6 pt-6">
               <div className="flex flex-col items-center">
-                <ListMusic className="w-4 h-4 text-purple-400 mb-1" />
+                <ListMusic className="w-4 h-4 text-accent mb-1" />
                 <span className="text-sm font-bold">{stats.playlists}</span>
                 <span className="text-zinc-500 text-[10px] uppercase tracking-wider">Playlists</span>
               </div>
               <div className="flex flex-col items-center">
-                <Users className="w-4 h-4 text-pink-400 mb-1" />
+                <Users className="w-4 h-4 text-accent mb-1" />
                 <span className="text-sm font-bold">{stats.followers}</span>
                 <span className="text-zinc-500 text-[10px] uppercase tracking-wider">Followers</span>
               </div>
               <div className="flex flex-col items-center">
-                <Users className="w-4 h-4 text-purple-400 mb-1" />
+                <Users className="w-4 h-4 text-accent mb-1" />
                 <span className="text-sm font-bold">{stats.following}</span>
                 <span className="text-zinc-500 text-[10px] uppercase tracking-wider">Following</span>
               </div>
@@ -143,7 +143,7 @@ export default function ProfilePage() {
           {/* right col: Profile Settings Form */}
           <div className="md:col-span-2 glass-card rounded-2xl p-8">
             <h3 className="text-lg font-bold flex items-center gap-2 border-b border-white/5 pb-4 mb-6">
-              <Edit3 className="w-5 h-5 text-purple-400" />
+              <Edit3 className="w-5 h-5 text-accent" />
               Edit Profile Settings
             </h3>
 
@@ -170,7 +170,7 @@ export default function ProfilePage() {
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all placeholder:text-zinc-500"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-zinc-500"
                 />
               </div>
 
@@ -183,7 +183,7 @@ export default function ProfilePage() {
                   value={avatarUrl}
                   onChange={(e) => setAvatarUrl(e.target.value)}
                   placeholder="https://images.unsplash.com/..."
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all placeholder:text-zinc-500"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-zinc-500"
                 />
               </div>
 
@@ -196,14 +196,14 @@ export default function ProfilePage() {
                   onChange={(e) => setBio(e.target.value)}
                   placeholder="Share a bit about your musical taste..."
                   rows={4}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all placeholder:text-zinc-500 resize-none"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-zinc-500 resize-none"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-500 hover:to-pink-400 text-white font-semibold px-6 py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-purple-500/25 transition-all cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed ml-auto"
+                className="royal-gradient text-white font-semibold px-6 py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-primary/25 transition-all cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed ml-auto"
               >
                 {loading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />

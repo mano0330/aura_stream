@@ -32,8 +32,8 @@ const MOCK_TRENDING: Track[] = [
 ];
 
 const MOCK_MIXES = [
-  { id: 'mix1', title: 'Daily Mix 1', description: 'Hans Zimmer, Max Richter, Olafur Arnalds', color: 'from-purple-600/30 to-blue-600/30', icon: '🎹' },
-  { id: 'mix2', title: 'AI DJ Focus', description: 'Lofi beats and instrumental synthwave for coding', color: 'from-pink-600/30 to-purple-600/30', icon: '🤖' },
+  { id: 'mix1', title: 'Daily Mix 1', description: 'Hans Zimmer, Max Richter, Olafur Arnalds', color: 'from-primary/30 to-accent/15', icon: '🎹' },
+  { id: 'mix2', title: 'AI DJ Focus', description: 'Lofi beats and instrumental synthwave for coding', color: 'from-accent/15 to-primary/30', icon: '🤖' },
   { id: 'mix3', title: 'Aura Workout', description: 'Upbeat electronic, house, high-tempo remixes', color: 'from-emerald-600/30 to-teal-600/30', icon: '⚡' },
 ];
 
@@ -41,7 +41,7 @@ const DISCOVER_MOODS = [
   { label: 'Lofi & Chill', query: 'lofi hip hop relaxing', emoji: '☕', color: 'from-amber-500/20 to-orange-600/20' },
   { label: 'Focus & Code', query: 'ambient coding music instrumental', emoji: '💻', color: 'from-blue-500/20 to-indigo-600/20' },
   { label: 'Workout', query: 'gym workout motivation high energy', emoji: '🏋️', color: 'from-red-500/20 to-pink-600/20' },
-  { label: 'Party', query: 'dance party hits 2024', emoji: '🎉', color: 'from-purple-500/20 to-pink-600/20' },
+  { label: 'Party', query: 'dance party hits 2024', emoji: '🎉', color: 'from-primary/20 to-accent/20' },
   { label: 'Telugu Hits', query: 'telugu hits top songs', emoji: '🎵', color: 'from-orange-500/20 to-yellow-600/20' },
   { label: 'Tamil Hits', query: 'tamil hits top songs', emoji: '🎻', color: 'from-emerald-500/20 to-green-600/20' },
   { label: 'Hindi Hits', query: 'hindi hits top songs', emoji: '💃', color: 'from-red-500/20 to-pink-600/20' },
@@ -80,17 +80,17 @@ function TrackCard({
   return (
     <div
       onClick={onPlay}
-      className={`glass-card rounded-2xl p-4 flex flex-col cursor-pointer group ${isCurrent ? 'border-purple-500/50 shadow-lg shadow-purple-500/10' : ''}`}
+      className={`glass-card rounded-2xl p-4 flex flex-col cursor-pointer group ${isCurrent ? 'border-primary/50 shadow-lg shadow-primary/10' : ''}`}
     >
       <div className="relative aspect-square rounded-xl overflow-hidden mb-4 bg-zinc-800">
         <img src={track.thumbnailUrl} alt={track.title} className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-between p-3 transition-opacity duration-300">
           {isAuthenticated && (
-            <button onClick={onLike} className={`p-2 rounded-full backdrop-blur-md bg-black/40 transition-all cursor-pointer ${isLiked ? 'text-pink-500' : 'text-zinc-300 hover:text-white'}`}>
-              <Heart className={`w-4 h-4 ${isLiked ? 'fill-pink-500' : ''}`} />
+            <button onClick={onLike} className={`p-2 rounded-full backdrop-blur-md bg-black/40 transition-all cursor-pointer ${isLiked ? 'text-accent' : 'text-zinc-300 hover:text-white'}`}>
+              <Heart className={`w-4 h-4 ${isLiked ? 'fill-accent' : ''}`} />
             </button>
           )}
-          <div className="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all mx-auto">
+          <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all mx-auto">
             {isCurrent && isPlaying ? <Pause className="w-5 h-5 text-white fill-white" /> : <Play className="w-5 h-5 text-white fill-white translate-x-0.5" />}
           </div>
           {isAuthenticated && (
@@ -100,7 +100,7 @@ function TrackCard({
           )}
         </div>
       </div>
-      <h4 className={`font-bold truncate text-sm ${isCurrent ? 'text-purple-400' : ''}`}>{track.title}</h4>
+      <h4 className={`font-bold truncate text-sm ${isCurrent ? 'text-accent' : ''}`}>{track.title}</h4>
       <p className="text-zinc-400 text-xs truncate mt-1">{track.artistName}</p>
     </div>
   );
@@ -131,7 +131,7 @@ function TrackRow({
   return (
     <div
       onClick={onPlay}
-      className={`flex items-center justify-between p-3 rounded-xl hover:bg-white/5 cursor-pointer group transition-colors ${isCurrent ? 'bg-purple-500/10' : ''}`}
+      className={`flex items-center justify-between p-3 rounded-xl hover:bg-white/5 cursor-pointer group transition-colors ${isCurrent ? 'bg-primary/10' : ''}`}
     >
       <div className="flex items-center gap-4 min-w-0 flex-1">
         {index !== undefined && (
@@ -144,7 +144,7 @@ function TrackRow({
           </div>
         </div>
         <div className="min-w-0">
-          <p className={`font-semibold text-sm truncate ${isCurrent ? 'text-purple-400' : 'text-white'}`}>{track.title}</p>
+          <p className={`font-semibold text-sm truncate ${isCurrent ? 'text-accent' : 'text-white'}`}>{track.title}</p>
           <p className="text-zinc-400 text-xs truncate mt-0.5">{track.artistName}</p>
         </div>
       </div>
@@ -154,8 +154,8 @@ function TrackRow({
             <button onClick={(e) => { e.stopPropagation(); onAddToPlaylist(e); }} className="p-2 rounded hover:bg-white/5 text-zinc-400 hover:text-white transition-colors opacity-0 group-hover:opacity-100">
               <PlusCircle className="w-4 h-4" />
             </button>
-            <button onClick={onLike} className={`p-2 rounded hover:bg-white/5 transition-colors ${isLiked ? 'text-pink-500' : 'text-zinc-400 hover:text-white'}`}>
-              <Heart className={`w-4 h-4 ${isLiked ? 'fill-pink-500' : ''}`} />
+            <button onClick={onLike} className={`p-2 rounded hover:bg-white/5 transition-colors ${isLiked ? 'text-accent' : 'text-zinc-400 hover:text-white'}`}>
+              <Heart className={`w-4 h-4 ${isLiked ? 'fill-accent' : ''}`} />
             </button>
           </>
         )}
@@ -308,8 +308,8 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#07070a] flex items-center justify-center text-white">
-        <Loader2 className="w-10 h-10 animate-spin text-purple-500" />
+      <div className="min-h-screen flex items-center justify-center text-white">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
       </div>
     );
   }
@@ -658,16 +658,27 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="relative min-h-screen bg-[#07070a] text-white overflow-hidden">
+    <div
+      className="relative min-h-screen text-white overflow-hidden"
+      style={{
+        background: 'linear-gradient(135deg, #060610 0%, #0a0520 40%, #060612 100%)',
+      }}
+    >
       {/* Ambient background orbs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-purple-900/10 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-pink-900/10 blur-[120px] pointer-events-none" />
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full opacity-20 blur-3xl"
+          style={{ background: 'radial-gradient(circle, #7c3aed 0%, transparent 70%)' }} />
+        <div className="absolute bottom-[-10%] right-[-5%] w-[400px] h-[400px] rounded-full opacity-15 blur-3xl"
+          style={{ background: 'radial-gradient(circle, #f59e0b 0%, transparent 70%)' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-8 blur-3xl"
+          style={{ background: 'radial-gradient(circle, #7c3aed 0%, transparent 70%)' }} />
+      </div>
 
       <div className="flex min-h-screen w-full">
         {/* ═══ SIDEBAR (hidden on mobile, visible on md+) ══════════════════ */}
       <aside className={`glass border-r border-white/5 hidden md:flex flex-col z-20 transition-all duration-300 ${isSidebarOpen ? 'w-64' : 'w-20'}`}>
         <div className="p-5 flex items-center gap-3">
-          <button onClick={toggleSidebar} className="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/25 cursor-pointer flex-shrink-0">
+          <button onClick={toggleSidebar} className="w-10 h-10 rounded-xl royal-gradient flex items-center justify-center shadow-lg shadow-primary/25 cursor-pointer flex-shrink-0">
             <Radio className="w-5 h-5 text-white" />
           </button>
           {isSidebarOpen && (
@@ -688,9 +699,9 @@ export default function DashboardPage() {
                 className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 relative group cursor-pointer ${isActive ? 'text-white bg-white/10' : 'text-zinc-400 hover:text-white hover:bg-white/5'}`}
               >
                 {isActive && (
-                  <motion.div layoutId="sidebar-pill" className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-purple-500 rounded-r-full" />
+                  <motion.div layoutId="sidebar-pill" className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-accent rounded-r-full" />
                 )}
-                <Icon className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-purple-400' : ''}`} />
+                <Icon className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-accent' : ''}`} />
                 {isSidebarOpen && <span className="text-sm font-semibold">{tab.label}</span>}
               </button>
             );
@@ -712,7 +723,7 @@ export default function DashboardPage() {
           {!isNative && (
             <Link
               href="/download"
-              className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/5 text-purple-400 hover:text-purple-300 transition-colors cursor-pointer"
+              className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/5 text-primary hover:text-primary/80 transition-colors cursor-pointer"
             >
               <Smartphone className="w-5 h-5 flex-shrink-0" />
               {isSidebarOpen && <span className="text-sm font-semibold">Download App</span>}
@@ -730,7 +741,7 @@ export default function DashboardPage() {
       <main className="flex-1 flex flex-col min-w-0 relative h-screen overflow-y-auto pb-36 md:pb-28">
 
         {/* Header */}
-        <header className="sticky top-0 bg-[#07070a]/80 backdrop-blur-md border-b border-white/5 z-10 px-6 py-4 flex items-center justify-between gap-4">
+        <header className="sticky top-0 bg-background/85 backdrop-blur-md border-b border-white/5 z-10 px-6 py-4 flex items-center justify-between gap-4">
           <form ref={searchContainerRef} onSubmit={handleSearch} className="w-full max-w-md relative flex flex-col items-center">
             <div className="w-full relative flex items-center">
               <Search className="absolute left-3 w-4 h-4 text-zinc-400" />
@@ -744,9 +755,9 @@ export default function DashboardPage() {
                   fetchSearchSuggestions(e.target.value);
                 }}
                 onFocus={() => setShowSuggestions(true)}
-                className="w-full bg-white/5 border border-white/10 rounded-full py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all placeholder:text-zinc-500"
+                className="w-full bg-white/5 border border-white/10 rounded-full py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-zinc-500"
               />
-              {searching && <Loader2 className="absolute right-3 w-4 h-4 animate-spin text-purple-500" />}
+              {searching && <Loader2 className="absolute right-3 w-4 h-4 animate-spin text-primary" />}
             </div>
 
             {showSuggestions && suggestions.length > 0 && (
@@ -773,7 +784,7 @@ export default function DashboardPage() {
           <div className="flex items-center gap-3 flex-shrink-0">
             <button className="p-2 rounded-full hover:bg-white/5 text-zinc-400 hover:text-white transition-colors relative">
               <Bell className="w-5 h-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-purple-500 rounded-full" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full" />
             </button>
 
             {isAuthenticated ? (
@@ -819,7 +830,7 @@ export default function DashboardPage() {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold flex items-center gap-2">
-                  <Search className="w-5 h-5 text-purple-400" /> Results for "{searchQuery}"
+                  <Search className="w-5 h-5 text-accent" /> Results for "{searchQuery}"
                 </h2>
                 <button onClick={() => setActiveTab('home')} className="text-xs text-zinc-400 hover:text-white flex items-center gap-1 cursor-pointer">
                   <X className="w-3.5 h-3.5" /> Clear
@@ -853,10 +864,10 @@ export default function DashboardPage() {
             <div className="space-y-6">
               <div className="flex items-center justify-between border-b border-white/5 pb-4">
                 <h2 className="text-xl font-bold flex items-center gap-2">
-                  <ListMusic className="w-5 h-5 text-purple-400" /> Playlists Library
+                  <ListMusic className="w-5 h-5 text-accent" /> Playlists Library
                 </h2>
                 {isAuthenticated && (
-                  <button onClick={() => setShowCreatePlaylistModal(true)} className="bg-purple-600 hover:bg-purple-500 text-white font-semibold px-4 py-2 rounded-full text-xs transition-colors flex items-center gap-1.5 cursor-pointer shadow-lg shadow-purple-500/20">
+                  <button onClick={() => setShowCreatePlaylistModal(true)} className="bg-primary hover:bg-primary/90 text-white font-semibold px-4 py-2 rounded-full text-xs transition-colors flex items-center gap-1.5 cursor-pointer shadow-lg shadow-primary/20">
                     <PlusCircle className="w-4 h-4" /> Create Playlist
                   </button>
                 )}
@@ -864,9 +875,9 @@ export default function DashboardPage() {
 
               {!isAuthenticated ? (
                 <div className="py-12 text-center">
-                  <ListMusic className="w-16 h-16 text-purple-500/40 mx-auto mb-4" />
+                  <ListMusic className="w-16 h-16 text-primary/40 mx-auto mb-4" />
                   <p className="text-zinc-400 text-sm mb-4">Log in to create and manage playlists</p>
-                  <Link href="/login" className="px-6 py-2.5 bg-purple-600 hover:bg-purple-500 rounded-full text-sm font-semibold transition-colors inline-block">
+                  <Link href="/login" className="px-6 py-2.5 bg-primary hover:bg-primary/90 rounded-full text-sm font-semibold transition-colors inline-block">
                     Log In
                   </Link>
                 </div>
@@ -911,10 +922,10 @@ export default function DashboardPage() {
                     <button
                       key={mood.label}
                       onClick={() => handleDiscoverMood(mood)}
-                      className={`p-5 rounded-2xl bg-gradient-to-tr ${mood.color} border border-white/5 hover:border-white/15 transition-all cursor-pointer group hover:scale-[1.02] duration-300 text-left ${activeMood === mood.label ? 'border-purple-500/40 shadow-lg shadow-purple-500/10' : ''}`}
+                      className={`p-5 rounded-2xl bg-gradient-to-tr ${mood.color} border border-white/5 hover:border-white/15 transition-all cursor-pointer group hover:scale-[1.02] duration-300 text-left ${activeMood === mood.label ? 'border-primary/40 shadow-lg shadow-primary/10' : ''}`}
                     >
                       <span className="text-3xl block mb-3">{mood.emoji}</span>
-                      <h4 className="font-bold text-sm group-hover:text-purple-300 transition-colors">{mood.label}</h4>
+                      <h4 className="font-bold text-sm group-hover:text-accent transition-colors">{mood.label}</h4>
                     </button>
                   ))}
                 </div>
@@ -924,13 +935,13 @@ export default function DashboardPage() {
               {(discoverLoading || discoverResults.length > 0) && (
                 <div className="space-y-4">
                   <h3 className="text-base font-bold flex items-center gap-2">
-                    <Music2 className="w-4 h-4 text-purple-400" />
+                    <Music2 className="w-4 h-4 text-accent" />
                     {activeMood} {discoverLoading ? '— Loading...' : `— ${discoverResults.length} tracks`}
                   </h3>
 
                   {discoverLoading ? (
                     <div className="flex items-center justify-center py-12">
-                      <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+                      <Loader2 className="w-8 h-8 animate-spin text-primary" />
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
@@ -966,7 +977,7 @@ export default function DashboardPage() {
             <div className="space-y-6 max-w-3xl mx-auto">
               <div>
                 <h2 className="text-2xl font-extrabold mb-1 flex items-center gap-2">
-                  <Sparkles className="w-6 h-6 text-purple-400" /> AI DJ & Playlist Generator
+                  <Sparkles className="w-6 h-6 text-accent" /> AI DJ & Playlist Generator
                 </h2>
                 <p className="text-zinc-400 text-sm">Chat with Aura, your AI music expert. Generate playlists, discover new sounds.</p>
               </div>
@@ -979,7 +990,7 @@ export default function DashboardPage() {
                     <button
                       key={prompt}
                       onClick={() => { setAiInput(prompt); }}
-                      className="text-xs px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 hover:border-purple-500/40 text-zinc-300 hover:text-white transition-all cursor-pointer"
+                      className="text-xs px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 hover:border-primary/40 text-zinc-300 hover:text-white transition-all cursor-pointer"
                     >
                       {prompt}
                     </button>
@@ -993,14 +1004,14 @@ export default function DashboardPage() {
                   {aiMessages.map((msg, i) => (
                     <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                       {msg.role === 'assistant' && (
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">
+                        <div className="w-8 h-8 rounded-full royal-gradient flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">
                           <Bot className="w-4 h-4 text-white" />
                         </div>
                       )}
                       <div
                         className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-line ${
                           msg.role === 'user'
-                            ? 'bg-purple-600 text-white rounded-br-none'
+                            ? 'bg-primary text-white rounded-br-none'
                             : 'bg-white/5 text-zinc-200 rounded-bl-none'
                         }`}
                       >
@@ -1010,13 +1021,13 @@ export default function DashboardPage() {
                   ))}
                   {aiLoading && (
                     <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center flex-shrink-0">
+                      <div className="w-8 h-8 rounded-full royal-gradient flex items-center justify-center flex-shrink-0">
                         <Bot className="w-4 h-4 text-white" />
                       </div>
                       <div className="bg-white/5 rounded-2xl rounded-bl-none px-4 py-3 flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                        <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                        <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                        <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                       </div>
                     </div>
                   )}
@@ -1029,13 +1040,13 @@ export default function DashboardPage() {
                     value={aiInput}
                     onChange={(e) => setAiInput(e.target.value)}
                     placeholder="Ask Aura anything about music..."
-                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500 transition-all placeholder:text-zinc-500"
+                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary transition-all placeholder:text-zinc-500"
                     disabled={aiLoading}
                   />
                   <button
                     type="submit"
                     disabled={aiLoading || !aiInput.trim()}
-                    className="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2.5 rounded-xl transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="bg-primary hover:bg-primary/90 text-white px-4 py-2.5 rounded-xl transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
                     <Send className="w-4 h-4" />
                   </button>
@@ -1051,7 +1062,7 @@ export default function DashboardPage() {
                 >
                   <div className="flex items-start justify-between">
                     <div>
-                      <span className="text-xs text-purple-400 font-bold uppercase tracking-wider flex items-center gap-1.5 mb-1">
+                      <span className="text-xs text-accent font-bold uppercase tracking-wider flex items-center gap-1.5 mb-1">
                         <Sparkles className="w-3.5 h-3.5" /> AI Generated
                       </span>
                       <h3 className="text-lg font-extrabold">{generatedPlaylist.playlistTitle}</h3>
@@ -1102,7 +1113,7 @@ export default function DashboardPage() {
                           alert(e.message || 'Failed to save playlist');
                         }
                       }}
-                      className="w-full border border-purple-500/30 hover:bg-purple-500/10 py-2.5 rounded-xl text-sm font-semibold transition-colors cursor-pointer text-purple-300"
+                      className="w-full border border-primary/30 hover:bg-primary/10 py-2.5 rounded-xl text-sm font-semibold transition-colors cursor-pointer text-primary"
                     >
                       + Save Playlist to Library
                     </button>
@@ -1115,19 +1126,19 @@ export default function DashboardPage() {
           {/* ── SOCIAL HUB TAB ────────────────────────────────── */}
           {activeTab === 'social' && (
             <div className="space-y-8 max-w-5xl mx-auto">
-              <div>
+                  <div>
                 <h2 className="text-2xl font-extrabold mb-1 flex items-center gap-2">
-                  <Users className="w-6 h-6 text-pink-400" /> Social Hub
+                  <Users className="w-6 h-6 text-accent" /> Social Hub
                 </h2>
                 <p className="text-zinc-400 text-sm">Connect with other music listeners and check their activity</p>
               </div>
 
               {!isAuthenticated ? (
                 <div className="py-16 text-center glass-card rounded-2xl">
-                  <Users className="w-16 h-16 text-pink-500/30 mx-auto mb-4" />
+                  <Users className="w-16 h-16 text-accent/30 mx-auto mb-4" />
                   <h3 className="font-bold mb-2">Connect With Music Lovers</h3>
                   <p className="text-zinc-400 text-sm mb-6">Log in to follow friends and see their music activity</p>
-                  <Link href="/login" className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-pink-500 rounded-full text-sm font-semibold inline-block hover:opacity-90 transition-opacity">
+                  <Link href="/login" className="px-6 py-2.5 royal-gradient rounded-full text-sm font-semibold inline-block hover:opacity-90 transition-opacity">
                     Log In to Connect
                   </Link>
                 </div>
@@ -1137,12 +1148,12 @@ export default function DashboardPage() {
                   <div className="lg:col-span-2 space-y-6">
                     <div className="glass rounded-2xl p-6 space-y-4">
                       <h3 className="text-base font-bold flex items-center gap-2 border-b border-white/5 pb-4">
-                        <Activity className="w-4 h-4 text-pink-400" /> Friends' Activity
+                        <Activity className="w-4 h-4 text-accent" /> Friends' Activity
                       </h3>
 
                       {feedLoading ? (
                         <div className="flex items-center justify-center py-8">
-                          <Loader2 className="w-8 h-8 animate-spin text-pink-500" />
+                          <Loader2 className="w-8 h-8 animate-spin text-primary" />
                         </div>
                       ) : activityFeed.length === 0 ? (
                         <div className="py-8 text-center">
@@ -1163,7 +1174,7 @@ export default function DashboardPage() {
                                 <p className="text-sm">
                                   <span className="font-bold text-white">{item.user.username}</span>
                                   <span className="text-zinc-400"> listened to </span>
-                                  <span className="font-semibold text-purple-300 cursor-pointer hover:text-purple-200" onClick={() => handleTrackSelect({ id: item.song.id, youtubeId: item.song.youtubeId, title: item.song.title, artistName: item.song.artistName, thumbnailUrl: item.song.thumbnailUrl, durationSeconds: item.song.durationSeconds })}>
+                                  <span className="font-semibold text-accent cursor-pointer hover:text-accent/80" onClick={() => handleTrackSelect({ id: item.song.id, youtubeId: item.song.youtubeId, title: item.song.title, artistName: item.song.artistName, thumbnailUrl: item.song.thumbnailUrl, durationSeconds: item.song.durationSeconds })}>
                                     {item.song.title}
                                   </span>
                                 </p>
@@ -1194,7 +1205,7 @@ export default function DashboardPage() {
                               <img
                                 src={listener.avatarUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=40&h=40&q=80'}
                                 alt={listener.username}
-                                className="w-8 h-8 rounded-full object-cover border border-purple-500/20 flex-shrink-0"
+                                className="w-8 h-8 rounded-full object-cover border border-primary/20 flex-shrink-0"
                               />
                               <div className="min-w-0">
                                 <p className="text-xs font-bold text-white truncate">{listener.username}</p>
@@ -1209,7 +1220,7 @@ export default function DashboardPage() {
                                   fetchFeed();
                                 } catch (e) {}
                               }}
-                              className="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-full text-[10px] font-bold transition-colors cursor-pointer flex-shrink-0"
+                              className="px-3 py-1.5 bg-primary hover:bg-primary/90 text-white rounded-full text-[10px] font-bold transition-colors cursor-pointer flex-shrink-0"
                             >
                               Follow
                             </button>
@@ -1222,19 +1233,19 @@ export default function DashboardPage() {
                     </div>
 
                     {/* My Profile Quick Link */}
-                    <Link href="/profile" className="glass-card rounded-2xl p-5 flex items-center justify-between group hover:border-purple-500/30 transition-all block">
+                    <Link href="/profile" className="glass-card rounded-2xl p-5 flex items-center justify-between group hover:border-primary/30 transition-all block">
                       <div className="flex items-center gap-4">
                         <img
                           src={user?.avatarUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&h=80&q=80'}
                           alt={user?.username}
-                          className="w-12 h-12 rounded-full object-cover border-2 border-purple-500/40"
+                          className="w-12 h-12 rounded-full object-cover border-2 border-primary/40"
                         />
                         <div className="min-w-0">
                           <p className="font-bold truncate text-sm">{user?.username}</p>
                           <p className="text-zinc-400 text-xs truncate mt-0.5">{user?.bio || 'No bio yet'}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 text-zinc-400 group-hover:text-purple-400 transition-colors flex-shrink-0 pl-2">
+                      <div className="flex items-center gap-2 text-zinc-400 group-hover:text-accent transition-colors flex-shrink-0 pl-2">
                         <span className="text-xs font-medium">Profile</span>
                         <ChevronRight className="w-4 h-4" />
                       </div>
@@ -1250,9 +1261,9 @@ export default function DashboardPage() {
             <>
               {/* Download App Banner (Mobile Web Browser Only) */}
               {!isNative && (
-                <section className="md:hidden p-4 rounded-2xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-between gap-4 mb-2">
+                <section className="md:hidden p-4 rounded-2xl bg-gradient-to-r from-primary/20 to-accent/20 border border-primary/30 flex items-center justify-between gap-4 mb-2">
                   <div className="flex items-center gap-3">
-                    <Smartphone className="w-8 h-8 text-purple-400 flex-shrink-0 animate-bounce" style={{ animationDuration: '3s' }} />
+                    <Smartphone className="w-8 h-8 text-accent flex-shrink-0 animate-bounce" style={{ animationDuration: '3s' }} />
                     <div>
                       <h4 className="font-bold text-sm">Aura Stream for Android</h4>
                       <p className="text-xs text-zinc-300">Install our official app for full-screen lock screen playback and offline features!</p>
@@ -1260,7 +1271,7 @@ export default function DashboardPage() {
                   </div>
                   <Link
                     href="/download"
-                    className="bg-purple-600 hover:bg-purple-500 text-white font-bold px-4 py-2 rounded-full text-xs transition-colors shadow-lg shadow-purple-500/25 flex-shrink-0"
+                    className="bg-primary hover:bg-primary/90 text-white font-bold px-4 py-2 rounded-full text-xs transition-colors shadow-lg shadow-primary/25 flex-shrink-0"
                   >
                     Get App
                   </Link>
@@ -1268,9 +1279,9 @@ export default function DashboardPage() {
               )}
 
               {/* Hero Banner */}
-              <section className="relative rounded-2xl overflow-hidden p-8 bg-gradient-to-r from-purple-900/40 via-pink-900/20 to-transparent border border-white/5">
+              <section className="relative rounded-2xl overflow-hidden p-8 bg-gradient-to-r from-primary/30 via-accent/5 to-transparent border border-white/5">
                 <div className="relative z-10 max-w-lg">
-                  <span className="text-purple-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2 mb-3">
+                  <span className="text-accent text-xs font-bold uppercase tracking-widest flex items-center gap-2 mb-3">
                     <Sparkles className="w-4 h-4 animate-pulse" /> AI recommendation active
                   </span>
                   <h1 className="text-3xl md:text-4xl font-extrabold mb-3 bg-gradient-to-r from-white via-zinc-100 to-zinc-400 bg-clip-text text-transparent">
@@ -1294,19 +1305,19 @@ export default function DashboardPage() {
                     </button>
                   </div>
                 </div>
-                <div className="absolute right-10 top-1/2 -translate-y-1/2 w-48 h-48 bg-gradient-to-tr from-purple-500 to-pink-500 rounded-full blur-[80px] opacity-30 pointer-events-none" />
+                <div className="absolute right-10 top-1/2 -translate-y-1/2 w-48 h-48 royal-gradient rounded-full blur-[80px] opacity-30 pointer-events-none" />
               </section>
 
               {/* Recommendations */}
               <section className="space-y-4">
                 <h2 className="text-xl font-bold flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-purple-400" /> 
+                  <Sparkles className="w-5 h-5 text-accent" /> 
                   {recommendedTracks.length > 0 && user?.preferences ? "Recommended for You" : "Custom Picks for You"}
                 </h2>
                 
                 {loadingRecommendations ? (
                   <div className="flex items-center justify-center py-12">
-                    <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+                    <Loader2 className="w-8 h-8 animate-spin text-primary" />
                   </div>
                 ) : recommendedTracks.length === 0 ? (
                   <p className="text-zinc-500 text-sm italic">No recommendations yet. Complete onboarding or play some songs!</p>
@@ -1333,7 +1344,7 @@ export default function DashboardPage() {
               <section className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-bold flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-pink-400" /> Trending Tracks
+                    <TrendingUp className="w-5 h-5 text-accent" /> Trending Tracks
                   </h2>
                   <button onClick={() => setActiveTab('discover')} className="text-sm text-zinc-400 hover:text-white flex items-center gap-1 cursor-pointer transition-colors">
                     Discover more <ChevronRight className="w-4 h-4" />
@@ -1342,7 +1353,7 @@ export default function DashboardPage() {
                 
                 {loadingTrending ? (
                   <div className="flex items-center justify-center py-12">
-                    <Loader2 className="w-8 h-8 animate-spin text-pink-500" />
+                    <Loader2 className="w-8 h-8 animate-spin text-primary" />
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
@@ -1439,10 +1450,10 @@ export default function DashboardPage() {
                   handleToggleLike(currentTrack, e);
                 }}
                 className={`transition-colors ml-1 flex-shrink-0 hidden md:block ${
-                  likedSongIds.includes(currentTrack.youtubeId) ? 'text-pink-500' : 'text-zinc-400 hover:text-purple-400'
+                  likedSongIds.includes(currentTrack.youtubeId) ? 'text-accent' : 'text-zinc-400 hover:text-accent'
                 }`}
               >
-                <Heart className={`w-4 h-4 ${likedSongIds.includes(currentTrack.youtubeId) ? 'fill-pink-500' : ''}`} />
+                <Heart className={`w-4 h-4 ${likedSongIds.includes(currentTrack.youtubeId) ? 'fill-accent' : ''}`} />
               </button>
             </>
           ) : (
@@ -1468,7 +1479,7 @@ export default function DashboardPage() {
               className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-transform shadow-lg cursor-pointer"
             >
               {isBuffering 
-                ? <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin text-purple-500" />
+                ? <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin text-primary" />
                 : isPlaying 
                   ? <Pause className="w-4 h-4 md:w-5 md:h-5 fill-black" /> 
                   : <Play className="w-4 h-4 md:w-5 md:h-5 fill-black translate-x-0.5" />}
@@ -1487,7 +1498,7 @@ export default function DashboardPage() {
             <div onClick={(e) => { e.stopPropagation(); handleProgressClick(e); }} className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden relative cursor-pointer group">
               <div
                 style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
-                className="absolute top-0 bottom-0 left-0 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:from-purple-400 group-hover:to-pink-400 transition-all"
+                className="absolute top-0 bottom-0 left-0 bg-gradient-to-r from-primary to-accent group-hover:from-primary/90 group-hover:to-accent/90 transition-all"
               />
             </div>
             <span className="w-7 md:w-8 text-[10px] md:text-xs">{formatTrackTime(duration || currentTrack?.durationSeconds || 0)}</span>
@@ -1498,7 +1509,7 @@ export default function DashboardPage() {
         <div className="hidden md:flex items-center justify-end gap-4 w-1/4 min-w-[180px]">
           <button
             onClick={(e) => { e.stopPropagation(); toggleStreamVisible(); }}
-            className={`p-2 rounded-lg transition-all cursor-pointer ${isStreamVisible ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' : 'text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent'}`}
+            className={`p-2 rounded-lg transition-all cursor-pointer ${isStreamVisible ? 'bg-primary/20 text-accent border border-primary/30' : 'text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent'}`}
             title="Toggle Video Stream"
           >
             <Tv className="w-4 h-4" />
@@ -1514,7 +1525,7 @@ export default function DashboardPage() {
               value={isMuted ? 0 : volume}
               onChange={(e) => setVolume(Number(e.target.value))}
               onClick={(e) => e.stopPropagation()}
-              className="w-20 accent-purple-500 cursor-pointer h-1"
+              className="w-20 accent-primary cursor-pointer h-1"
             />
           </div>
         </div>
@@ -1530,10 +1541,10 @@ export default function DashboardPage() {
                 handleToggleLike(currentTrack, e);
               }}
               className={`p-2 transition-colors active:scale-90 cursor-pointer ${
-                likedSongIds.includes(currentTrack.youtubeId) ? 'text-pink-500' : 'text-zinc-400'
+                likedSongIds.includes(currentTrack.youtubeId) ? 'text-accent' : 'text-zinc-400'
               }`}
             >
-              <Heart className={`w-5 h-5 ${likedSongIds.includes(currentTrack.youtubeId) ? 'fill-pink-500' : ''}`} />
+              <Heart className={`w-5 h-5 ${likedSongIds.includes(currentTrack.youtubeId) ? 'fill-accent' : ''}`} />
             </button>
           )}
           <button
@@ -1547,7 +1558,7 @@ export default function DashboardPage() {
             className="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center active:scale-95 transition-transform cursor-pointer disabled:opacity-70"
           >
             {isBuffering ? (
-              <Loader2 className="w-4 h-4 animate-spin text-purple-500" />
+              <Loader2 className="w-4 h-4 animate-spin text-primary" />
             ) : isPlaying ? (
               <Pause className="w-4 h-4 fill-black text-black" />
             ) : (
@@ -1573,7 +1584,7 @@ export default function DashboardPage() {
           <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/10 rounded-b-xl overflow-hidden md:hidden">
             <div
               style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
-              className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-300"
+              className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-300"
             />
           </div>
         )}
@@ -1589,10 +1600,10 @@ export default function DashboardPage() {
               key={tab.id}
               onClick={() => { setActiveTab(tab.id); if (tab.id === 'playlists') fetchPlaylists(); }}
               className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
-                isActive ? 'text-purple-400' : 'text-zinc-500'
+                isActive ? 'text-accent' : 'text-zinc-500'
               }`}
             >
-              <Icon className={`w-5 h-5 ${isActive ? 'text-purple-400' : ''}`} />
+              <Icon className={`w-5 h-5 ${isActive ? 'text-accent' : ''}`} />
               <span className="text-[9px] font-semibold">{tab.label}</span>
             </button>
           );
@@ -1615,9 +1626,9 @@ export default function DashboardPage() {
                 <button
                   key={pl.id}
                   onClick={() => handleAddTrackToPlaylist(pl.id, activeAddToPlaylistTrack)}
-                  className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-white/5 hover:bg-purple-600/20 hover:border-purple-500/30 border border-transparent transition-all text-left cursor-pointer text-sm font-semibold"
+                  className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-white/5 hover:bg-primary/20 hover:border-primary/30 border border-transparent transition-all text-left cursor-pointer text-sm font-semibold"
                 >
-                  <ListMusic className="w-4 h-4 text-purple-400" />
+                  <ListMusic className="w-4 h-4 text-accent" />
                   <span className="truncate">{pl.title}</span>
                 </button>
               ))}
@@ -1655,7 +1666,7 @@ export default function DashboardPage() {
                   placeholder="My Playlist"
                   value={newPlaylistTitle}
                   onChange={(e) => setNewPlaylistTitle(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary"
                 />
               </div>
             </div>
@@ -1663,7 +1674,7 @@ export default function DashboardPage() {
               <button type="button" onClick={() => setShowCreatePlaylistModal(false)} className="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl py-2.5 text-xs font-semibold cursor-pointer">
                 Cancel
               </button>
-              <button type="submit" className="flex-1 bg-purple-600 hover:bg-purple-500 text-white rounded-xl py-2.5 text-xs font-semibold cursor-pointer shadow-lg shadow-purple-500/20">
+              <button type="submit" className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-xl py-2.5 text-xs font-semibold cursor-pointer shadow-lg shadow-primary/20">
                 Create
               </button>
             </div>
@@ -1673,9 +1684,9 @@ export default function DashboardPage() {
 
       {/* Onboarding Taste Questionnaire */}
       {showOnboarding && (
-        <div className="fixed inset-0 bg-[#07070a]/95 backdrop-blur-xl z-50 flex flex-col justify-center items-center p-6 overflow-y-auto">
+        <div className="fixed inset-0 bg-[#060610]/95 backdrop-blur-xl z-50 flex flex-col justify-center items-center p-6 overflow-y-auto">
           <div className="max-w-xl w-full glass p-8 rounded-3xl border border-white/10 shadow-2xl relative">
-            <h2 className="text-2xl font-extrabold text-center mb-1 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-extrabold text-center mb-1 shimmer-text">
               Welcome to Aura Stream!
             </h2>
             <p className="text-zinc-400 text-sm text-center mb-8">
@@ -1708,7 +1719,7 @@ export default function DashboardPage() {
                       }}
                       className={`flex items-center gap-3 p-3.5 rounded-xl border text-sm font-semibold transition-all cursor-pointer ${
                         selected 
-                          ? 'bg-purple-600/30 border-purple-500 text-white shadow-lg' 
+                          ? 'bg-primary/30 border-primary text-white shadow-lg' 
                           : 'bg-white/5 border-white/5 text-zinc-400 hover:border-white/10 hover:text-white'
                       }`}
                     >
@@ -1748,7 +1759,7 @@ export default function DashboardPage() {
                       }}
                       className={`flex flex-col items-center p-3 rounded-xl border text-center transition-all cursor-pointer ${
                         selected 
-                          ? 'bg-purple-600/30 border-purple-500 text-white shadow-lg' 
+                          ? 'bg-primary/30 border-primary text-white shadow-lg' 
                           : 'bg-white/5 border-white/5 text-zinc-400 hover:border-white/10 hover:text-white'
                       }`}
                     >
@@ -1768,7 +1779,7 @@ export default function DashboardPage() {
               type="button"
               onClick={handleSaveOnboarding}
               disabled={selectedLangs.length === 0 || selectedArtists.length === 0}
-              className="w-full bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-500 hover:to-pink-400 text-white rounded-xl py-3 text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-purple-500/25 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full royal-gradient text-white rounded-xl py-3 text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-primary/25 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Continue to Aura Stream
             </button>

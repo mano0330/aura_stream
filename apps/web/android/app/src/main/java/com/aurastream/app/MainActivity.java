@@ -25,6 +25,14 @@ public class MainActivity extends BridgeActivity {
         stopService(new Intent(this, AudioService.class));
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (this.bridge != null && this.bridge.getWebView() != null) {
+            this.bridge.getWebView().onResume();
+        }
+    }
+
     private void startAudioService() {
         Intent serviceIntent = new Intent(this, AudioService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

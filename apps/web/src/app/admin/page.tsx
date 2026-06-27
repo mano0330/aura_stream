@@ -49,7 +49,7 @@ function MiniBarChart({ data }: { data: { date: string; seconds: number }[] }) {
           >
             <div className="w-full flex-1 flex items-end">
               <div
-                className="w-full rounded-t bg-gradient-to-t from-purple-600 to-purple-400 hover:from-purple-500 hover:to-pink-400 transition-all duration-300"
+                className="w-full rounded-t bg-gradient-to-t from-primary to-accent hover:from-primary/90 hover:to-accent/90 transition-all duration-300"
                 style={{ height: `${Math.max(pct, pct > 0 ? 8 : 2)}%`, minHeight: 2 }}
               />
             </div>
@@ -89,7 +89,7 @@ function Avatar({ src, name, size = 'sm' }: { src?: string; name?: string; size?
   return src ? (
     <img src={src} alt={name} className={`${sizeClass} rounded-full object-cover flex-shrink-0`} />
   ) : (
-    <div className={`${sizeClass} rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center font-bold text-white flex-shrink-0`}>
+    <div className={`${sizeClass} rounded-full royal-gradient flex items-center justify-center font-bold text-white flex-shrink-0`}>
       {initials}
     </div>
   );
@@ -119,7 +119,7 @@ function UserInsightModal({ userId, onClose }: { userId: string; onClose: () => 
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 flex-shrink-0">
           <h2 className="text-base font-bold text-white flex items-center gap-2">
-            <Eye className="w-4 h-4 text-purple-400" /> User Insights
+            <Eye className="w-4 h-4 text-accent" /> User Insights
           </h2>
           <button onClick={onClose} className="p-2 rounded-xl hover:bg-white/10 transition-colors cursor-pointer">
             <X className="w-4 h-4 text-zinc-400" />
@@ -129,7 +129,7 @@ function UserInsightModal({ userId, onClose }: { userId: string; onClose: () => 
         <div className="overflow-y-auto flex-1 p-5 space-y-5">
           {loading && (
             <div className="flex items-center justify-center py-16">
-              <RefreshCw className="w-6 h-6 text-purple-400 animate-spin" />
+              <RefreshCw className="w-6 h-6 text-primary animate-spin" />
             </div>
           )}
           {!loading && !data && (
@@ -153,8 +153,8 @@ function UserInsightModal({ userId, onClose }: { userId: string; onClose: () => 
               {/* Key stats */}
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { label: 'Total Time', value: formatDuration(data.totalListeningSeconds), icon: Clock, color: 'text-purple-400' },
-                  { label: 'Total Plays', value: data.totalListens, icon: PlayCircle, color: 'text-pink-400' },
+                  { label: 'Total Time', value: formatDuration(data.totalListeningSeconds), icon: Clock, color: 'text-primary' },
+                  { label: 'Total Plays', value: data.totalListens, icon: PlayCircle, color: 'text-accent' },
                 ].map(s => (
                   <div key={s.label} className="bg-white/5 rounded-2xl p-4 text-center">
                     <s.icon className={`w-5 h-5 mx-auto mb-1 ${s.color}`} />
@@ -197,7 +197,7 @@ function UserInsightModal({ userId, onClose }: { userId: string; onClose: () => 
                           <p className="text-xs text-zinc-500 truncate">{ts.song?.artistName}</p>
                         </div>
                         <div className="text-right shrink-0">
-                          <p className="text-xs text-purple-400 font-bold">{ts.playCount}×</p>
+                          <p className="text-xs text-accent font-bold">{ts.playCount}×</p>
                           <p className="text-[10px] text-zinc-600">{formatDuration(ts.totalSeconds)}</p>
                         </div>
                       </div>
@@ -341,8 +341,8 @@ export default function AdminPage() {
   // ── Loading state ──
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#07070a] flex items-center justify-center">
-        <RefreshCw className="w-8 h-8 text-purple-500 animate-spin" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <RefreshCw className="w-8 h-8 text-primary animate-spin" />
       </div>
     );
   }
@@ -350,11 +350,11 @@ export default function AdminPage() {
   // ── Auth guard ──
   if (!isAuthenticated || user?.role !== 'ADMIN') {
     return (
-      <div className="min-h-screen bg-[#07070a] flex flex-col items-center justify-center gap-4 text-white px-6 text-center">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 text-white px-6 text-center">
         <Shield className="w-16 h-16 text-red-400 opacity-50" />
         <h1 className="text-2xl font-bold">Admin Access Only</h1>
         <p className="text-zinc-500 text-sm">This page is restricted to administrators.</p>
-        <Link href="/" className="mt-2 px-6 py-3 bg-purple-600 rounded-2xl text-sm font-semibold hover:bg-purple-500 transition-colors">
+        <Link href="/" className="mt-2 px-6 py-3 bg-primary rounded-2xl text-sm font-semibold hover:bg-primary/90 transition-colors">
           Go back home
         </Link>
       </div>
@@ -368,9 +368,9 @@ export default function AdminPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#07070a] text-white pb-24 sm:pb-8">
+    <div className="min-h-screen bg-background text-white pb-24 sm:pb-8">
       {/* ── Header ── */}
-      <div className="sticky top-0 z-30 bg-[#07070a]/90 backdrop-blur-xl border-b border-white/5">
+      <div className="sticky top-0 z-30 bg-background/90 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <Link href="/" className="p-2 rounded-xl hover:bg-white/10 transition-colors">
@@ -378,7 +378,7 @@ export default function AdminPage() {
             </Link>
             <div>
               <h1 className="text-base font-bold text-white flex items-center gap-1.5">
-                <Shield className="w-4 h-4 text-purple-400" />
+                <Shield className="w-4 h-4 text-accent" />
                 Admin Dashboard
               </h1>
               <p className="text-[10px] text-zinc-500">{user.username} · Admin</p>
@@ -402,14 +402,14 @@ export default function AdminPage() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors cursor-pointer whitespace-nowrap ${
                 activeTab === tab.id
-                  ? 'border-purple-500 text-purple-400'
+                  ? 'border-primary text-accent'
                   : 'border-transparent text-zinc-500 hover:text-zinc-300'
               }`}
             >
               <tab.icon className="w-4 h-4" />
               {tab.label}
               {tab.id === 'users' && users.length > 0 && (
-                <span className="text-[10px] bg-purple-500/20 text-purple-400 px-1.5 py-0.5 rounded-full leading-none">
+                <span className="text-[10px] bg-primary/20 text-accent px-1.5 py-0.5 rounded-full leading-none">
                   {users.length}
                 </span>
               )}
@@ -434,8 +434,8 @@ export default function AdminPage() {
               <motion.div key="overview" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="space-y-5">
                 {/* Stat grid */}
                 <div className="grid grid-cols-2 gap-3">
-                  <StatCard icon={Users} label="Total Users" value={stats?.users ?? 0} color="bg-purple-600" />
-                  <StatCard icon={Music} label="Songs" value={stats?.songs ?? 0} color="bg-pink-600" />
+                  <StatCard icon={Users} label="Total Users" value={stats?.users ?? 0} color="bg-primary" />
+                  <StatCard icon={Music} label="Songs" value={stats?.songs ?? 0} color="bg-accent" />
                   <StatCard icon={Headphones} label="Total Plays" value={stats?.totalListens ?? 0} color="bg-blue-600" />
                   <StatCard icon={Clock} label="Listen Time" value={formatDuration(stats?.totalListeningDurationSeconds ?? 0)} color="bg-emerald-600" />
                 </div>
@@ -444,7 +444,7 @@ export default function AdminPage() {
                 <div className="glass-card rounded-2xl overflow-hidden">
                   <div className="px-4 py-3 border-b border-white/5">
                     <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                      <TrendingUp className="w-4 h-4 text-purple-400" /> Top Listeners
+                      <TrendingUp className="w-4 h-4 text-accent" /> Top Listeners
                     </h3>
                   </div>
                   <div className="p-3 space-y-1">
@@ -464,7 +464,7 @@ export default function AdminPage() {
                           <div className="flex items-center gap-2 mt-0.5">
                             <div className="flex-1 bg-white/10 rounded-full h-1.5 overflow-hidden">
                               <div
-                                className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
+                                className="h-full bg-gradient-to-r from-primary to-accent rounded-full"
                                 style={{
                                   width: `${((u.totalListeningSeconds || 0) / Math.max(topListeners[0]?.totalListeningSeconds || 1, 1)) * 100}%`
                                 }}
@@ -483,7 +483,7 @@ export default function AdminPage() {
                 <div className="glass-card rounded-2xl overflow-hidden">
                   <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between">
                     <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                      <Radio className="w-4 h-4 text-pink-400" /> What's Playing Now
+                      <Radio className="w-4 h-4 text-accent" /> What's Playing Now
                     </h3>
                     <span className="flex items-center gap-1.5 text-[10px] text-green-400">
                       <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" /> Live
@@ -522,7 +522,7 @@ export default function AdminPage() {
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                     placeholder="Search users…"
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 pl-10 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-purple-500/50 transition-colors"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 pl-10 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-primary/50 transition-colors"
                   />
                 </div>
 
@@ -555,7 +555,7 @@ export default function AdminPage() {
                           <div className="flex items-center gap-1.5 shrink-0">
                             <button
                               onClick={() => setSelectedUserId(u.id)}
-                              className="p-2 rounded-xl bg-purple-500/15 hover:bg-purple-500/30 text-purple-400 transition-colors cursor-pointer"
+                              className="p-2 rounded-xl bg-primary/15 hover:bg-primary/30 text-accent transition-colors cursor-pointer"
                               title="View insights"
                             >
                               <Eye className="w-3.5 h-3.5" />
@@ -662,13 +662,13 @@ export default function AdminPage() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`flex flex-col items-center gap-1 px-4 py-2 rounded-2xl transition-colors cursor-pointer min-w-0 ${
-                activeTab === tab.id ? 'text-purple-400' : 'text-zinc-600'
+                activeTab === tab.id ? 'text-accent' : 'text-zinc-600'
               }`}
             >
               <tab.icon className="w-5 h-5" />
               <span className="text-[10px] font-medium">{tab.label}</span>
               {activeTab === tab.id && (
-                <motion.div layoutId="tab-indicator" className="w-1 h-1 rounded-full bg-purple-500" />
+                <motion.div layoutId="tab-indicator" className="w-1 h-1 rounded-full bg-accent" />
               )}
             </button>
           ))}

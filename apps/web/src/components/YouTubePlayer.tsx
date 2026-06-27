@@ -171,6 +171,49 @@ export default function YouTubePlayer() {
     } catch (e) { /* Player not ready */ }
   }, [isPlaying, youtubePlayer, currentTrack]);
 
+  // ── Sync Media Session API for mobile lock screen and background controls ──
+  useEffect(() => {
+    if (!currentTrack || typeof window === 'undefined' || !('mediaSession' in navigator)) return;
+
+    // Update metadata
+    navigator.mediaSession.metadata = new window.MediaMetadata({
+      title: currentTrack.title,
+      artist: currentTrack.artistName,
+      album: 'Aura Stream',
+      artwork: [
+        { src: currentTrack.thumbnailUrl || '', sizes: '96x96', type: 'image/jpeg' },
+        { src: currentTrack.thumbnailUrl || '', sizes: '128x128', type: 'image/jpeg' },
+        { src: currentTrack.thumbnailUrl || '', sizes: '192x192', type: 'image/jpeg' },
+        { src: currentTrack.thumbnailUrl || '', sizes: '256x256', type: 'image/jpeg' },
+        { src: currentTrack.thumbnailUrl || '', sizes: '384x384', type: 'image/jpeg' },
+        { src: currentTrack.thumbnailUrl || '', sizes: '512x512', type: 'image/jpeg' },
+      ],
+    });
+
+    // Update playback state
+    navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
+
+    // Register action handlers
+    try {
+      navigator.mediaSession.setActionHandler('play', () => {
+        usePlayerStore.getState().setPlaying(true);
+        if (youtubePlayer && youtubePlayer.playVideo) youtubePlayer.playVideo();
+      });
+      navigator.mediaSession.setActionHandler('pause', () => {
+        usePlayerStore.getState().setPlaying(false);
+        if (youtubePlayer && youtubePlayer.pauseVideo) youtubePlayer.pauseVideo();
+      });
+      navigator.mediaSession.setActionHandler('previoustrack', () => {
+        usePlayerStore.getState().prevTrack();
+      });
+      navigator.mediaSession.setActionHandler('nexttrack', () => {
+        usePlayerStore.getState().nextTrack();
+      });
+    } catch (e) {
+      console.warn('MediaSession handler registration failed', e);
+    }
+  }, [currentTrack, isPlaying, youtubePlayer]);
+
   const startTrackingTime = () => {
     if (timeUpdateInterval.current) clearInterval(timeUpdateInterval.current);
     timeUpdateInterval.current = setInterval(() => {

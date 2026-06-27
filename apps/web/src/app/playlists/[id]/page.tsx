@@ -138,23 +138,23 @@ export default function PlaylistDetailsPage() {
 
   if (isLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#07070a] flex items-center justify-center text-white">
-        <Loader2 className="w-10 h-10 animate-spin text-purple-500" />
+      <div className="min-h-screen bg-background flex items-center justify-center text-white">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#07070a] flex items-center justify-center text-white">
-        <Loader2 className="w-10 h-10 animate-spin text-purple-500" />
+      <div className="min-h-screen bg-background flex items-center justify-center text-white">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
       </div>
     );
   }
 
   if (error || !playlist) {
     return (
-      <div className="min-h-screen bg-[#07070a] flex flex-col items-center justify-center text-white px-4">
+      <div className="min-h-screen bg-[#060610] flex flex-col items-center justify-center text-white px-4">
         <h2 className="text-2xl font-bold text-red-400 mb-2">Error loading playlist</h2>
         <p className="text-zinc-400 mb-6">{error || 'Playlist could not be found'}</p>
         <Link href="/" className="bg-white/5 border border-white/10 px-6 py-2.5 rounded-full text-sm hover:bg-white/10 transition-colors">
@@ -167,10 +167,10 @@ export default function PlaylistDetailsPage() {
   const isOwner = playlist.ownerId === user?.id;
 
   return (
-    <div className="relative min-h-screen bg-[#07070a] text-white py-12 px-4 md:px-8">
+    <div className="relative min-h-screen text-white py-12 px-4 md:px-8">
       {/* Background gradients */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-purple-600/10 blur-[100px]" />
-      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[350px] h-[350px] rounded-full bg-pink-600/10 blur-[100px]" />
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-primary/10 blur-[100px]" />
+      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[350px] h-[350px] rounded-full bg-accent/10 blur-[100px]" />
 
       <div className="max-w-6xl mx-auto z-10 relative">
         <Link href="/" className="inline-flex items-center gap-2 text-zinc-400 hover:text-white mb-8 transition-colors text-sm font-medium">
@@ -185,7 +185,7 @@ export default function PlaylistDetailsPage() {
           </div>
 
           <div className="flex-1 space-y-3">
-            <span className="text-xs uppercase tracking-widest text-purple-400 font-bold flex items-center gap-1.5">
+            <span className="text-xs uppercase tracking-widest text-accent font-bold flex items-center gap-1.5">
               {isPrivate ? <Lock className="w-3.5 h-3.5" /> : <Globe className="w-3.5 h-3.5" />}
               {isPrivate ? 'Private' : 'Public'} {isCollaborative ? 'Collaborative' : ''} Playlist
             </span>
@@ -214,7 +214,7 @@ export default function PlaylistDetailsPage() {
           {/* left col: Track list */}
           <div className="lg:col-span-2 glass rounded-2xl p-6">
             <h3 className="text-lg font-bold border-b border-white/5 pb-4 mb-4 flex items-center gap-2">
-              <Music className="w-5 h-5 text-purple-400" /> Tracks
+              <Music className="w-5 h-5 text-accent" /> Tracks
             </h3>
 
             {playlist.playlistSongs.length === 0 ? (
@@ -229,13 +229,13 @@ export default function PlaylistDetailsPage() {
                     <div 
                       key={ps.song.id}
                       className={`flex items-center justify-between p-3 rounded-xl hover:bg-white/5 group transition-colors ${
-                        isCurrent ? 'bg-purple-500/10' : ''
+                        isCurrent ? 'bg-primary/10' : ''
                       }`}
                     >
                       <div className="flex items-center gap-4 min-w-0 flex-1">
                         <button 
                           onClick={() => handleTrackPlay(ps.song, index)}
-                          className="w-8 h-8 rounded-full bg-white/5 group-hover:bg-purple-500 flex items-center justify-center transition-colors cursor-pointer"
+                          className="w-8 h-8 rounded-full bg-white/5 group-hover:bg-primary flex items-center justify-center transition-colors cursor-pointer"
                         >
                           {isCurrent && isPlaying ? (
                             <Pause className="w-3.5 h-3.5 text-white fill-white group-hover:text-white" />
@@ -245,7 +245,7 @@ export default function PlaylistDetailsPage() {
                         </button>
                         
                         <div className="min-w-0">
-                          <p className={`font-semibold text-sm truncate ${isCurrent ? 'text-purple-400' : 'text-white'}`}>
+                          <p className={`font-semibold text-sm truncate ${isCurrent ? 'text-accent' : 'text-white'}`}>
                             {ps.song.title}
                           </p>
                           <p className="text-zinc-400 text-xs truncate mt-0.5">{ps.song.artistName}</p>
@@ -292,7 +292,7 @@ export default function PlaylistDetailsPage() {
                     type="checkbox"
                     checked={isPrivate}
                     onChange={(e) => handleToggleSettings('isPrivate', e.target.checked)}
-                    className="accent-purple-500 w-4 h-4 cursor-pointer"
+                    className="accent-primary w-4 h-4 cursor-pointer"
                   />
                 </div>
 
@@ -305,7 +305,7 @@ export default function PlaylistDetailsPage() {
                     type="checkbox"
                     checked={isCollaborative}
                     onChange={(e) => handleToggleSettings('isCollaborative', e.target.checked)}
-                    className="accent-purple-500 w-4 h-4 cursor-pointer"
+                    className="accent-primary w-4 h-4 cursor-pointer"
                   />
                 </div>
               </div>
@@ -315,17 +315,17 @@ export default function PlaylistDetailsPage() {
             {(isOwner || isCollaborative) && (
               <div className="glass rounded-2xl p-6 space-y-4">
                 <h3 className="text-lg font-bold border-b border-white/5 pb-3 flex items-center gap-2">
-                  <Users className="w-5 h-5 text-pink-400" /> Collaborators
+                  <Users className="w-5 h-5 text-accent" /> Collaborators
                 </h3>
 
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center font-bold text-xs uppercase text-white">
+                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center font-bold text-xs uppercase text-white">
                       {playlist.owner.username[0]}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold truncate">{playlist.owner.username}</p>
-                      <span className="text-[10px] text-purple-400 font-bold uppercase tracking-wider">Owner</span>
+                      <span className="text-[10px] text-accent font-bold uppercase tracking-wider">Owner</span>
                     </div>
                   </div>
 
@@ -368,11 +368,11 @@ export default function PlaylistDetailsPage() {
                         required
                         value={collabUsername}
                         onChange={(e) => setCollabUsername(e.target.value)}
-                        className="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs flex-1 focus:outline-none focus:border-purple-500"
+                        className="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs flex-1 focus:outline-none focus:border-primary"
                       />
                       <button 
                         type="submit" 
-                        className="bg-purple-600 hover:bg-purple-500 text-white rounded-xl px-3 flex items-center justify-center cursor-pointer"
+                        className="bg-primary hover:bg-primary/90 text-white rounded-xl px-3 flex items-center justify-center cursor-pointer"
                       >
                         <UserPlus className="w-4 h-4" />
                       </button>

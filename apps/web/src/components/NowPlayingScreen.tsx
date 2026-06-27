@@ -386,7 +386,7 @@ export default function NowPlayingScreen({
                   className="w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer"
                   style={{ background: 'rgba(124,58,237,0.2)', border: '1px solid rgba(124,58,237,0.3)' }}
                 >
-                  <SkipForward className="w-4 h-4 text-purple-400" />
+                  <SkipForward className="w-4 h-4 text-accent" />
                 </motion.button>
               </motion.div>
             )}
